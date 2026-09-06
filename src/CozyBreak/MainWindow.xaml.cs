@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -167,6 +168,7 @@ public partial class MainWindow : Window
             var menu = new Forms.ContextMenuStrip();
             menu.Items.Add("Configurações", null, (_, _) => { Show(); Activate(); });
             menu.Items.Add("Modo Apresentação (1h)", null, (_, _) => PresentationBox.IsChecked = PresentationBox.IsChecked != true);
+            menu.Items.Add("Testar alerta de água", null, (_, _) => ShowWater());
             menu.Items.Add("Pausa Imediata", null, (_, _) => ShowBreak());
             menu.Items.Add("-");
             menu.Items.Add("Encerrar", null, (_, _) => { _exitRequested = true; Close(); });
@@ -205,7 +207,7 @@ public partial class MainWindow : Window
             _waterTimer.Stop();
             _waterTimer.Interval = TimeSpan.FromMinutes(minutosAdiar);
             _waterTimer.Start();
-        });
+        }, _perfil.Configuracoes.SomHabilitado);
         _waterOverlay.Closed += (_, _) => _waterOverlay = null;
         _waterOverlay.Show();
     }

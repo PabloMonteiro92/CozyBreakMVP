@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -24,11 +25,13 @@ public partial class WaterPetOverlay : Window
     private readonly DispatcherTimer _walkTimer = new() { Interval = TimeSpan.FromMilliseconds(120) };
     private int _frameIndex;
 
-    public WaterPetOverlay(int doseMl, Action<int> callbackAdiar)
+    public WaterPetOverlay(int doseMl, Action<int> callbackAdiar, bool soundEnabled)
     {
         InitializeComponent();
         _callbackAdiar = callbackAdiar;
         TxtDose.Text = $"Hora da água! {doseMl} ml";
+        if (soundEnabled)
+            SystemSounds.Asterisk.Play();
         _walkTimer.Tick += WalkTimer_Tick;
         Loaded += WaterPetOverlay_Loaded;
         Closed += (_, _) => _walkTimer.Stop();
