@@ -1,0 +1,10 @@
+bin/
+obj/
+artifacts/
+.vs/
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+*.user
+*.suo
