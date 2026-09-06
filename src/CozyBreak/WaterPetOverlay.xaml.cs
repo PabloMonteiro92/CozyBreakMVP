@@ -30,6 +30,7 @@ public partial class WaterPetOverlay : Window
         InitializeComponent();
         _callbackAdiar = callbackAdiar;
         TxtDose.Text = $"Hora da água! {doseMl} ml";
+        PetImage.Source = WalkFrames[0];
         if (soundEnabled)
             SystemSounds.Asterisk.Play();
         _walkTimer.Tick += WalkTimer_Tick;
