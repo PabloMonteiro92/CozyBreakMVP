@@ -134,10 +134,23 @@ public partial class MainWindow : Window
         return opcoes.Where(o => o.Selecionado).Select(o => o.Foco).ToList();
     }
 
-    private void Presentation_Click(object sender, RoutedEventArgs e)
+    private void Presentation_Checked(object sender, RoutedEventArgs e)
     {
         _presentationUntil = DateTime.Now.AddHours(1);
-        MessageBox.Show("Alertas suspensos durante a próxima hora.", "Modo Apresentação", MessageBoxButton.OK, MessageBoxImage.Information);
+        UpdatePresentationLabel(true);
+    }
+
+    private void Presentation_Unchecked(object sender, RoutedEventArgs e)
+    {
+        _presentationUntil = DateTime.MinValue;
+        UpdatePresentationLabel(false);
+    }
+
+    private void UpdatePresentationLabel(bool enabled)
+    {
+        var state = enabled ? "ativado" : "desativado";
+        PresentationBox.Content = $"Modo apresentação: {state}";
+        PresentationBox.SetValue(System.Windows.Automation.AutomationProperties.NameProperty, $"Modo apresentação {state}");
     }
 
     private void InitializeOrUpdateRuntime()
@@ -153,7 +166,7 @@ public partial class MainWindow : Window
 
             var menu = new Forms.ContextMenuStrip();
             menu.Items.Add("Configurações", null, (_, _) => { Show(); Activate(); });
-            menu.Items.Add("Modo Apresentação (1h)", null, (_, _) => _presentationUntil = DateTime.Now.AddHours(1));
+            menu.Items.Add("Modo Apresentação (1h)", null, (_, _) => PresentationBox.IsChecked = PresentationBox.IsChecked != true);
             menu.Items.Add("Pausa Imediata", null, (_, _) => ShowBreak());
             menu.Items.Add("-");
             menu.Items.Add("Encerrar", null, (_, _) => { _exitRequested = true; Close(); });
@@ -172,7 +185,16 @@ public partial class MainWindow : Window
     private void WaterTimer_Tick(object? sender, EventArgs e) => ShowWater();
     private void BreakTimer_Tick(object? sender, EventArgs e) => ShowBreak();
 
-    private bool Pausado => DateTime.Now < _presentationUntil;
+    private bool Pausado
+    {
+        get
+        {
+            if (PresentationBox.IsChecked == true && DateTime.Now >= _presentationUntil)
+                PresentationBox.IsChecked = false;
+
+            return PresentationBox.IsChecked == true;
+        }
+    }
 
     private void ShowWater()
     {

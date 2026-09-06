@@ -21,6 +21,6 @@
         <TextBlock Text="A meta de água é uma estimativa de bem-estar, não uma orientação médica." TextWrapping="Wrap" Foreground="#806F63" Margin="0,18,0,0"/>
       </StackPanel>
     </ScrollViewer>
-    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0"><Button x:Name="PresentationButton" AutomationProperties.Name="Ativar modo apresentação por uma hora" Content="Modo apresentação" Padding="12,8" Margin="0,0,10,0" Click="Presentation_Click"/><Button AutomationProperties.Name="Salvar perfil e começar" Content="Salvar e começar" Padding="16,8" Background="#D28B68" Foreground="White" Click="Save_Click"/></StackPanel>
+    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0"><CheckBox x:Name="PresentationBox" AutomationProperties.Name="Modo apresentação desativado" Content="Modo apresentação: desativado" VerticalAlignment="Center" Margin="0,0,10,0" Checked="Presentation_Checked" Unchecked="Presentation_Unchecked"/><Button AutomationProperties.Name="Salvar perfil e começar" Content="Salvar e começar" Padding="16,8" Background="#D28B68" Foreground="White" Click="Save_Click"/></StackPanel>
   </Grid>
 </Window>
