@@ -35,15 +35,10 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <Canvas Width="56" Height="56" HorizontalAlignment="Left" VerticalAlignment="Center">
-            <Rectangle Canvas.Left="10" Canvas.Top="20" Width="34" Height="22" Fill="#C68642" />
-            <Rectangle Canvas.Left="30" Canvas.Top="10" Width="18" Height="18" Fill="#C68642" />
-            <Rectangle Canvas.Left="26" Canvas.Top="8" Width="8" Height="14" Fill="#8F5422" />
-            <Rectangle Canvas.Left="44" Canvas.Top="18" Width="6" Height="6" Fill="#4A2A0C" />
-            <Rectangle Canvas.Left="38" Canvas.Top="14" Width="4" Height="4" Fill="#1E140A" />
-            <Rectangle Canvas.Left="14" Canvas.Top="42" Width="6" Height="10" Fill="#8F5422" />
-            <Rectangle Canvas.Left="32" Canvas.Top="42" Width="6" Height="10" Fill="#8F5422" />
-            <Rectangle Canvas.Left="4" Canvas.Top="18" Width="6" Height="6" Fill="#C68642" />
-        </Canvas>
+        <Image x:Name="PetImage"
+               Width="56" Height="56"
+               HorizontalAlignment="Left" VerticalAlignment="Center"
+               RenderOptions.BitmapScalingMode="NearestNeighbor"
+               Stretch="Uniform" />
     </Grid>
 </Window>

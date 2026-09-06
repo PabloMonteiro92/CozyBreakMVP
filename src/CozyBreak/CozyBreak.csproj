@@ -20,4 +20,8 @@
   <ItemGroup>
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Pet\mouse_idle.png" />
+    <Resource Include="Assets\Pet\mouse_walk.png" />
+  </ItemGroup>
 </Project>
