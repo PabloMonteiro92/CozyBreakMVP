@@ -4,8 +4,6 @@ using System.Windows.Media.Animation;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Forms = System.Windows.Forms;
-using MediaBrush = System.Windows.Media.Brush;
-using MediaColor = System.Windows.Media.Color;
 
 namespace CozyBreak;
 
@@ -20,7 +18,6 @@ public partial class WaterPetOverlay : Window
         InitializeComponent();
         _callbackAdiar = callbackAdiar;
         TxtDose.Text = $"Hora da água! {doseMl} ml";
-        CreatePixelMouse();
         if (soundEnabled)
             SystemSounds.Asterisk.Play();
         _walkTimer.Tick += WalkTimer_Tick;
@@ -59,36 +56,6 @@ public partial class WaterPetOverlay : Window
         };
 
         BeginAnimation(LeftProperty, anim);
-    }
-
-    private void CreatePixelMouse()
-    {
-        var fur = new SolidColorBrush(MediaColor.FromRgb(190, 130, 92));
-        var darkFur = new SolidColorBrush(MediaColor.FromRgb(112, 70, 48));
-        var ear = new SolidColorBrush(MediaColor.FromRgb(235, 163, 157));
-        var eye = new SolidColorBrush(MediaColor.FromRgb(35, 25, 22));
-
-        AddPixel(8, 22, 30, 18, fur);
-        AddPixel(28, 14, 18, 20, fur);
-        AddPixel(31, 9, 10, 10, ear);
-        AddPixel(43, 18, 7, 7, darkFur);
-        AddPixel(39, 16, 4, 4, eye);
-        AddPixel(14, 40, 6, 11, darkFur);
-        AddPixel(31, 40, 6, 11, darkFur);
-        AddPixel(2, 22, 9, 5, fur);
-    }
-
-    private void AddPixel(double left, double top, double width, double height, MediaBrush fill)
-    {
-        PetCanvas.Children.Add(new System.Windows.Shapes.Rectangle
-        {
-            Width = width,
-            Height = height,
-            Fill = fill,
-            SnapsToDevicePixels = true
-        });
-        System.Windows.Controls.Canvas.SetLeft(PetCanvas.Children[^1], left);
-        System.Windows.Controls.Canvas.SetTop(PetCanvas.Children[^1], top);
     }
 
     private void Drink_Click(object sender, RoutedEventArgs e) => Close();

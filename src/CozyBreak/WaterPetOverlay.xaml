@@ -38,6 +38,16 @@
         <Canvas x:Name="PetCanvas"
                 Width="56" Height="56"
                 HorizontalAlignment="Left" VerticalAlignment="Center"
-                RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                Panel.ZIndex="10"
+                RenderOptions.BitmapScalingMode="NearestNeighbor">
+            <Rectangle Canvas.Left="8" Canvas.Top="22" Width="30" Height="18" Fill="#BE825C" />
+            <Rectangle Canvas.Left="28" Canvas.Top="14" Width="18" Height="20" Fill="#BE825C" />
+            <Rectangle Canvas.Left="31" Canvas.Top="9" Width="10" Height="10" Fill="#EBA39D" />
+            <Rectangle Canvas.Left="43" Canvas.Top="18" Width="7" Height="7" Fill="#704630" />
+            <Rectangle Canvas.Left="39" Canvas.Top="16" Width="4" Height="4" Fill="#231916" />
+            <Rectangle Canvas.Left="14" Canvas.Top="40" Width="6" Height="11" Fill="#704630" />
+            <Rectangle Canvas.Left="31" Canvas.Top="40" Width="6" Height="11" Fill="#704630" />
+            <Rectangle Canvas.Left="2" Canvas.Top="22" Width="9" Height="5" Fill="#BE825C" />
+        </Canvas>
     </Grid>
 </Window>
