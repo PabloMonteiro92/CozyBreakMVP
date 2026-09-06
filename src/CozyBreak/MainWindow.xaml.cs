@@ -168,7 +168,8 @@ public partial class MainWindow : Window
             var menu = new Forms.ContextMenuStrip();
             menu.Items.Add("Configurações", null, (_, _) => { Show(); Activate(); });
             menu.Items.Add("Modo Apresentação (1h)", null, (_, _) => PresentationBox.IsChecked = PresentationBox.IsChecked != true);
-            menu.Items.Add("Testar alerta de água", null, (_, _) => ShowWater());
+            menu.Items.Add("Testar alerta de água", null, (_, _) =>
+                Dispatcher.BeginInvoke(new Action(() => ShowWater(ignorePresentationMode: true))));
             menu.Items.Add("Pausa Imediata", null, (_, _) => ShowBreak());
             menu.Items.Add("-");
             menu.Items.Add("Encerrar", null, (_, _) => { _exitRequested = true; Close(); });
@@ -198,9 +199,9 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ShowWater()
+    private void ShowWater(bool ignorePresentationMode = false)
     {
-        if (Pausado || _waterOverlay is not null) return;
+        if ((!ignorePresentationMode && Pausado) || _waterOverlay is not null) return;
 
         _waterOverlay = new WaterPetOverlay(_perfil.DoseAguaMl, minutosAdiar =>
         {
