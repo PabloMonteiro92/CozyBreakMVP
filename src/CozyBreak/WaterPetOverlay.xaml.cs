@@ -10,8 +10,8 @@ namespace CozyBreak;
 public partial class WaterPetOverlay : Window
 {
     // Sprites: "Tiny, Tiny Heroes - Animals" por Kacper Woźniak (thkaspar.itch.io/tth-animals), licença CC BY 4.0.
-    private static readonly BitmapImage WalkSheet = new(new Uri("pack://application:,,,/Assets/Pet/mouse_walk.png"));
-    private static readonly BitmapImage IdleSheet = new(new Uri("pack://application:,,,/Assets/Pet/mouse_idle.png"));
+    private static readonly BitmapImage WalkSheet = LoadSprite("Assets/Pet/mouse_walk.png");
+    private static readonly BitmapImage IdleSheet = LoadSprite("Assets/Pet/mouse_idle.png");
 
     private static readonly CroppedBitmap[] WalkFrames =
     [
@@ -24,6 +24,18 @@ public partial class WaterPetOverlay : Window
     private readonly Action<int> _callbackAdiar;
     private readonly DispatcherTimer _walkTimer = new() { Interval = TimeSpan.FromMilliseconds(120) };
     private int _frameIndex;
+
+    private static BitmapImage LoadSprite(string path)
+    {
+        var sprite = new BitmapImage();
+        sprite.BeginInit();
+        sprite.UriSource = new Uri($"pack://application:,,,/CozyBreak;component/{path}");
+        sprite.CacheOption = BitmapCacheOption.OnLoad;
+        sprite.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+        sprite.EndInit();
+        sprite.Freeze();
+        return sprite;
+    }
 
     public WaterPetOverlay(int doseMl, Action<int> callbackAdiar, bool soundEnabled)
     {
