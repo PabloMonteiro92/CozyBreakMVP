@@ -1,0 +1,36 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore
+        run: dotnet restore CozyBreak.sln
+      - name: Build
+        run: dotnet build CozyBreak.sln --configuration Release --no-restore
+      - name: Tests
+        run: dotnet test tests/CozyBreak.Tests/CozyBreak.Tests.csproj --configuration Release --no-restore --collect:"XPlat Code Coverage"
+      - name: Publish portable executable
+        run: dotnet publish src/CozyBreak/CozyBreak.csproj --configuration Release --runtime win-x64 --self-contained true --output artifacts/win-x64
+      - name: SHA-256
+        shell: pwsh
+        run: Get-FileHash artifacts/win-x64/CozyBreak.exe -Algorithm SHA256 | Format-List
+      - name: Dependency audit
+        run: dotnet list src/CozyBreak/CozyBreak.csproj package --vulnerable --include-transitive
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: CozyBreak-win-x64
+          path: artifacts/win-x64/CozyBreak.exe
