@@ -21,7 +21,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+       System.Windows.Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
         WaterSlider.ValueChanged += (_, _) => WaterValue.Text = $"{WaterSlider.Value:0} minutos";
         BreakSlider.ValueChanged += (_, _) => BreakValue.Text = $"{BreakSlider.Value:0} minutos";
@@ -45,7 +45,7 @@ public partial class MainWindow : Window
         }
 
         Cleanup();
-        Application.Current.Shutdown();
+       System.Windows.Application.Current.Shutdown();
     }
 
     private void LoadProfile()
