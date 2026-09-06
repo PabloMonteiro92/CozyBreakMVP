@@ -35,11 +35,9 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <Image x:Name="PetImage"
-               Width="56" Height="56"
-               HorizontalAlignment="Left" VerticalAlignment="Center"
-               Source="/CozyBreak;component/Assets/Pet/mouse_idle.png"
-               RenderOptions.BitmapScalingMode="NearestNeighbor"
-               Stretch="Uniform" />
+        <Canvas x:Name="PetCanvas"
+                Width="56" Height="56"
+                HorizontalAlignment="Left" VerticalAlignment="Center"
+                RenderOptions.BitmapScalingMode="NearestNeighbor" />
     </Grid>
 </Window>

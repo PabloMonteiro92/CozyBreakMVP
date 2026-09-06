@@ -1,48 +1,26 @@
 using System.Windows;
 using System.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Forms = System.Windows.Forms;
+using MediaBrush = System.Windows.Media.Brush;
+using MediaColor = System.Windows.Media.Color;
 
 namespace CozyBreak;
 
 public partial class WaterPetOverlay : Window
 {
-    // Sprites: "Tiny, Tiny Heroes - Animals" por Kacper Woźniak (thkaspar.itch.io/tth-animals), licença CC BY 4.0.
-    private static readonly BitmapImage WalkSheet = LoadSprite("Assets/Pet/mouse_walk.png");
-    private static readonly BitmapImage IdleSheet = LoadSprite("Assets/Pet/mouse_idle.png");
-
-    private static readonly CroppedBitmap[] WalkFrames =
-    [
-        new CroppedBitmap(WalkSheet, new Int32Rect(0, 0, 16, 16)),
-        new CroppedBitmap(WalkSheet, new Int32Rect(16, 0, 16, 16)),
-        new CroppedBitmap(WalkSheet, new Int32Rect(32, 0, 16, 16)),
-        new CroppedBitmap(WalkSheet, new Int32Rect(48, 0, 16, 16))
-    ];
-
     private readonly Action<int> _callbackAdiar;
     private readonly DispatcherTimer _walkTimer = new() { Interval = TimeSpan.FromMilliseconds(120) };
     private int _frameIndex;
-
-    private static BitmapImage LoadSprite(string path)
-    {
-        var sprite = new BitmapImage();
-        sprite.BeginInit();
-        sprite.UriSource = new Uri($"pack://application:,,,/CozyBreak;component/{path}");
-        sprite.CacheOption = BitmapCacheOption.OnLoad;
-        sprite.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-        sprite.EndInit();
-        sprite.Freeze();
-        return sprite;
-    }
 
     public WaterPetOverlay(int doseMl, Action<int> callbackAdiar, bool soundEnabled)
     {
         InitializeComponent();
         _callbackAdiar = callbackAdiar;
         TxtDose.Text = $"Hora da água! {doseMl} ml";
-        PetImage.Source = WalkFrames[0];
+        CreatePixelMouse();
         if (soundEnabled)
             SystemSounds.Asterisk.Play();
         _walkTimer.Tick += WalkTimer_Tick;
@@ -52,7 +30,7 @@ public partial class WaterPetOverlay : Window
 
     private void WalkTimer_Tick(object? sender, EventArgs e)
     {
-        PetImage.Source = WalkFrames[_frameIndex % WalkFrames.Length];
+        PetCanvas.RenderTransform = new TranslateTransform(0, _frameIndex % 2 == 0 ? 0 : -2);
         _frameIndex++;
     }
 
@@ -77,10 +55,40 @@ public partial class WaterPetOverlay : Window
         anim.Completed += (_, _) =>
         {
             _walkTimer.Stop();
-            PetImage.Source = IdleSheet;
+            PetCanvas.RenderTransform = new TranslateTransform();
         };
 
         BeginAnimation(LeftProperty, anim);
+    }
+
+    private void CreatePixelMouse()
+    {
+        var fur = new SolidColorBrush(MediaColor.FromRgb(190, 130, 92));
+        var darkFur = new SolidColorBrush(MediaColor.FromRgb(112, 70, 48));
+        var ear = new SolidColorBrush(MediaColor.FromRgb(235, 163, 157));
+        var eye = new SolidColorBrush(MediaColor.FromRgb(35, 25, 22));
+
+        AddPixel(8, 22, 30, 18, fur);
+        AddPixel(28, 14, 18, 20, fur);
+        AddPixel(31, 9, 10, 10, ear);
+        AddPixel(43, 18, 7, 7, darkFur);
+        AddPixel(39, 16, 4, 4, eye);
+        AddPixel(14, 40, 6, 11, darkFur);
+        AddPixel(31, 40, 6, 11, darkFur);
+        AddPixel(2, 22, 9, 5, fur);
+    }
+
+    private void AddPixel(double left, double top, double width, double height, MediaBrush fill)
+    {
+        PetCanvas.Children.Add(new System.Windows.Shapes.Rectangle
+        {
+            Width = width,
+            Height = height,
+            Fill = fill,
+            SnapsToDevicePixels = true
+        });
+        System.Windows.Controls.Canvas.SetLeft(PetCanvas.Children[^1], left);
+        System.Windows.Controls.Canvas.SetTop(PetCanvas.Children[^1], top);
     }
 
     private void Drink_Click(object sender, RoutedEventArgs e) => Close();
