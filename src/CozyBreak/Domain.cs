@@ -90,6 +90,9 @@ public static class Validacao
 {
     public static string? Perfil(Perfil perfil)
     {
+        if (perfil.Usuario is null || perfil.Configuracoes is null || perfil.Usuario.FocosDesconforto is null)
+            return "O perfil armazenado está incompleto.";
+
         if (string.IsNullOrWhiteSpace(perfil.Usuario.Nome) || perfil.Usuario.Nome.Length > 80)
             return "Informe um nome ou apelido entre 1 e 80 caracteres.";
 

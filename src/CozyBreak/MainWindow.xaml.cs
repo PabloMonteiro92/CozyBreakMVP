@@ -1,13 +1,16 @@
 using System.Globalization;
+using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Forms = System.Windows.Forms;
 using Button = System.Windows.Controls.Button; using Color = System.Windows.Media.Color;
 using Brushes = System.Windows.Media.Brushes;
 using MessageBox = System.Windows.MessageBox;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using MediaBrush = System.Windows.Media.Brush;
 
 namespace CozyBreak;
 
@@ -72,7 +75,6 @@ public partial class MainWindow : Window
         if (_store.Existe && Validacao.Perfil(_perfil) is null)
         {
             InitializeOrUpdateRuntime();
-            Hide();
         }
     }
 
@@ -135,10 +137,23 @@ public partial class MainWindow : Window
         return opcoes.Where(o => o.Selecionado).Select(o => o.Foco).ToList();
     }
 
-    private void Presentation_Click(object sender, RoutedEventArgs e)
+    private void Presentation_Checked(object sender, RoutedEventArgs e)
     {
         _presentationUntil = DateTime.Now.AddHours(1);
-        MessageBox.Show("Alertas suspensos durante a próxima hora.", "Modo Apresentação", MessageBoxButton.OK, MessageBoxImage.Information);
+        UpdatePresentationLabel(true);
+    }
+
+    private void Presentation_Unchecked(object sender, RoutedEventArgs e)
+    {
+        _presentationUntil = DateTime.MinValue;
+        UpdatePresentationLabel(false);
+    }
+
+    private void UpdatePresentationLabel(bool enabled)
+    {
+        var state = enabled ? "ativado" : "desativado";
+        PresentationBox.Content = $"Modo apresentação: {state}";
+        PresentationBox.SetValue(System.Windows.Automation.AutomationProperties.NameProperty, $"Modo apresentação {state}");
     }
 
     private void InitializeOrUpdateRuntime()
@@ -154,7 +169,9 @@ public partial class MainWindow : Window
 
             var menu = new Forms.ContextMenuStrip();
             menu.Items.Add("Configurações", null, (_, _) => { Show(); Activate(); });
-            menu.Items.Add("Modo Apresentação (1h)", null, (_, _) => _presentationUntil = DateTime.Now.AddHours(1));
+            menu.Items.Add("Modo Apresentação (1h)", null, (_, _) => PresentationBox.IsChecked = PresentationBox.IsChecked != true);
+            menu.Items.Add("Testar alerta de água", null, (_, _) =>
+                Dispatcher.BeginInvoke(new Action(() => ShowWater(ignorePresentationMode: true))));
             menu.Items.Add("Pausa Imediata", null, (_, _) => ShowBreak());
             menu.Items.Add("-");
             menu.Items.Add("Encerrar", null, (_, _) => { _exitRequested = true; Close(); });
@@ -173,18 +190,27 @@ public partial class MainWindow : Window
     private void WaterTimer_Tick(object? sender, EventArgs e) => ShowWater();
     private void BreakTimer_Tick(object? sender, EventArgs e) => ShowBreak();
 
-    private bool Pausado => DateTime.Now < _presentationUntil;
-
-    private void ShowWater()
+    private bool Pausado
     {
-        if (Pausado || _waterOverlay is not null) return;
+        get
+        {
+            if (PresentationBox.IsChecked == true && DateTime.Now >= _presentationUntil)
+                PresentationBox.IsChecked = false;
+
+            return PresentationBox.IsChecked == true;
+        }
+    }
+
+    private void ShowWater(bool ignorePresentationMode = false)
+    {
+        if ((!ignorePresentationMode && Pausado) || _waterOverlay is not null) return;
 
         _waterOverlay = new WaterPetOverlay(_perfil.DoseAguaMl, minutosAdiar =>
         {
             _waterTimer.Stop();
             _waterTimer.Interval = TimeSpan.FromMinutes(minutosAdiar);
             _waterTimer.Start();
-        });
+        }, _perfil.Configuracoes.SomHabilitado);
         _waterOverlay.Closed += (_, _) => _waterOverlay = null;
         _waterOverlay.Show();
     }
@@ -215,6 +241,7 @@ public partial class MainWindow : Window
         };
 
         var panel = new StackPanel { Margin = new Thickness(24) };
+        panel.Children.Add(CreateAnimatedBear());
         panel.Children.Add(new TextBlock
         {
             Text = exercicio.Titulo,
@@ -248,6 +275,55 @@ public partial class MainWindow : Window
         dialog.Closed += (_, _) => _breakDialog = null;
         dialog.Show();
     }
+
+    private static FrameworkElement CreateAnimatedBear()
+    {
+        var bear = new System.Windows.Controls.Canvas
+        {
+            Width = 72,
+            Height = 58,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Margin = new Thickness(0, 0, 0, 4),
+            RenderTransform = new TranslateTransform()
+        };
+
+        var fur = new SolidColorBrush(Color.FromRgb(166, 116, 78));
+        var darkFur = new SolidColorBrush(Color.FromRgb(105, 67, 43));
+        var muzzle = new SolidColorBrush(Color.FromRgb(224, 178, 133));
+        AddPixel(bear, 8, 4, 14, 14, fur);
+        AddPixel(bear, 50, 4, 14, 14, fur);
+        AddPixel(bear, 14, 12, 44, 34, fur);
+        AddPixel(bear, 24, 30, 24, 14, muzzle);
+        AddPixel(bear, 25, 24, 5, 5, darkFur);
+        AddPixel(bear, 42, 24, 5, 5, darkFur);
+        AddPixel(bear, 32, 36, 8, 5, darkFur);
+
+        var bob = new DoubleAnimation
+        {
+            From = 0,
+            To = -4,
+            Duration = TimeSpan.FromMilliseconds(650),
+            AutoReverse = true,
+            RepeatBehavior = RepeatBehavior.Forever
+        };
+        ((TranslateTransform)bear.RenderTransform).BeginAnimation(TranslateTransform.YProperty, bob);
+        return bear;
+    }
+
+    private static void AddPixel(System.Windows.Controls.Canvas canvas, double left, double top, double width, double height, MediaBrush fill)
+    {
+        var pixel = new System.Windows.Shapes.Rectangle
+        {
+            Width = width,
+            Height = height,
+            Fill = fill,
+            SnapsToDevicePixels = true
+        };
+        System.Windows.Controls.Canvas.SetLeft(pixel, left);
+        System.Windows.Controls.Canvas.SetTop(pixel, top);
+        canvas.Children.Add(pixel);
+    }
+
     private void Cleanup()
     {
         _waterTimer.Stop();

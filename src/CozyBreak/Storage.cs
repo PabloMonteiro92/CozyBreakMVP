@@ -23,15 +23,15 @@ public sealed class PerfilStore
             {
                 var protegido = File.ReadAllBytes(PathProtegido);
                 var json = ProtectedData.Unprotect(protegido, Entropy, DataProtectionScope.CurrentUser);
-                var perfil = JsonSerializer.Deserialize<Perfil>(json, Options) ?? new Perfil();
-                return Validacao.Perfil(perfil) is null ? perfil : new Perfil();
+                var perfil = JsonSerializer.Deserialize<Perfil>(json, Options);
+                return PerfilValido(perfil) ? perfil! : new Perfil();
             }
 
             // Migração única de versões anteriores que usavam JSON sem proteção.
             if (File.Exists(PathLegado))
             {
-                var perfil = JsonSerializer.Deserialize<Perfil>(File.ReadAllText(PathLegado), Options) ?? new Perfil();
-                if (Validacao.Perfil(perfil) is null) { Salvar(perfil); TryDelete(PathLegado); return perfil; }
+                var perfil = JsonSerializer.Deserialize<Perfil>(File.ReadAllText(PathLegado), Options);
+                if (PerfilValido(perfil)) { Salvar(perfil!); TryDelete(PathLegado); return perfil!; }
             }
         }
         catch (CryptographicException) { }
@@ -39,6 +39,12 @@ public sealed class PerfilStore
         catch (JsonException) { }
         return new Perfil();
     }
+
+    private static bool PerfilValido(Perfil? perfil) =>
+        perfil?.Usuario is not null &&
+        perfil.Configuracoes is not null &&
+        perfil.Usuario.FocosDesconforto is not null &&
+        Validacao.Perfil(perfil) is null;
 
     public void Salvar(Perfil perfil)
     {

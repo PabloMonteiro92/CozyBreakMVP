@@ -1,6 +1,6 @@
 # Atualização do MVP — melhorias incorporadas
 
-A segunda versão do MVP adiciona proteção local com DPAPI no escopo do usuário atual, migração do arquivo JSON legado, exclusão do perfil, projeto de testes automatizados, auditoria de cobertura no CI, nomes de acessibilidade nos controles, exibição da pausa na tela ativa e script opcional de assinatura Authenticode.
+A segunda versão do MVP adiciona proteção local com DPAPI no escopo do usuário atual, migração do arquivo JSON legado, projeto de testes automatizados, auditoria de cobertura no CI, nomes de acessibilidade nos controles, exibição da pausa na tela ativa e script opcional de assinatura Authenticode. A exclusão do perfil está disponível na camada de armazenamento, mas ainda não possui comando exposto na interface.
 
 A assinatura digital não pode ser executada automaticamente sem um certificado corporativo. O script `scripts/sign-release.ps1` exige um certificado instalado no runner Windows e falha se a assinatura não for validada. O certificado e a chave privada nunca devem ser armazenados no repositório.
 

@@ -1,5 +1,7 @@
 # CozyBreak — arquivos centrais em texto legível
 
+> Este documento é uma referência histórica dos arquivos centrais. Para a implementação vigente, consulte diretamente `src/CozyBreak/`. A versão atual usa `PresentationBox`, `DispatcherTimer`, sprites pixel art embutidos e `WaterPetOverlay` com parâmetro de som; os trechos abaixo podem não refletir todas as mudanças posteriores.
+
 Este documento reúne os quatro arquivos principais do MVP em blocos de código Markdown para inspeção rápida.
 
 ## Domain.cs

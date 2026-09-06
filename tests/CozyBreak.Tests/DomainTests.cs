@@ -60,4 +60,34 @@ public class DomainTests
         Assert.True(Validacao.TentarConverterDouble(entrada, out var valor));
         Assert.Equal(esperado, valor);
     }
+
+    [Theory]
+    [InlineData(29, false)]
+    [InlineData(30, true)]
+    [InlineData(180, true)]
+    [InlineData(181, false)]
+    public void IntervaloAguaRespeitaLimitesDeProducao(int intervalo, bool valido)
+    {
+        var perfil = new Perfil
+        {
+            Usuario = new Usuario { Nome = "Ana", Idade = 30, PesoKg = 70, AlturaCm = 170 },
+            Configuracoes = new Configuracoes { IntervaloAguaMinutos = intervalo }
+        };
+
+        Assert.Equal(valido, Validacao.Perfil(perfil) is null);
+    }
+
+    [Fact]
+    public void PerfilComEstruturaNulaERejeitadoSemLancarExcecao()
+    {
+        var perfil = new Perfil
+        {
+            Usuario = null!,
+            Configuracoes = new Configuracoes()
+        };
+
+        var erro = Validacao.Perfil(perfil);
+
+        Assert.Contains("incompleto", erro!, StringComparison.OrdinalIgnoreCase);
+    }
 }
