@@ -1,0 +1,49 @@
+<Window x:Class="CozyBreak.WaterPetOverlay"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="CozyBreak Hydration Alert"
+        Height="80"
+        Width="350"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        RenderOptions.BitmapScalingMode="NearestNeighbor"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True">
+    <Grid>
+        <Border Background="#FFFDF8"
+                BorderBrush="#D28B68"
+                BorderThickness="2"
+                CornerRadius="8"
+                Padding="8"
+                Margin="60,0,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center" Margin="0,0,8,0">
+                    <TextBlock x:Name="TxtDose" Text="Hora da água! 200 ml" FontWeight="Bold" FontSize="12" Foreground="#514238" />
+                    <TextBlock Text="Pausa para hidratar o organismo." FontSize="10" Foreground="#806F63" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="Tomei" Click="Drink_Click" Background="#D28B68" Foreground="White" Padding="6,2" Margin="0,0,4,0" BorderThickness="0" Cursor="Hand" />
+                    <Button Content="+5m" Click="Snooze_Click" Background="#E8DDD5" Foreground="#514238" Padding="6,2" BorderThickness="0" Cursor="Hand" ToolTip="Adiar por 5 minutos" />
+                </StackPanel>
+            </Grid>
+        </Border>
+        <Canvas Width="56" Height="56" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Rectangle Canvas.Left="10" Canvas.Top="20" Width="34" Height="22" Fill="#C68642" />
+            <Rectangle Canvas.Left="30" Canvas.Top="10" Width="18" Height="18" Fill="#C68642" />
+            <Rectangle Canvas.Left="26" Canvas.Top="8" Width="8" Height="14" Fill="#8F5422" />
+            <Rectangle Canvas.Left="44" Canvas.Top="18" Width="6" Height="6" Fill="#4A2A0C" />
+            <Rectangle Canvas.Left="38" Canvas.Top="14" Width="4" Height="4" Fill="#1E140A" />
+            <Rectangle Canvas.Left="14" Canvas.Top="42" Width="6" Height="10" Fill="#8F5422" />
+            <Rectangle Canvas.Left="32" Canvas.Top="42" Width="6" Height="10" Fill="#8F5422" />
+            <Rectangle Canvas.Left="4" Canvas.Top="18" Width="6" Height="6" Fill="#C68642" />
+        </Canvas>
+    </Grid>
+</Window>
