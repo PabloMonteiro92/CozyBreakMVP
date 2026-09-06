@@ -4,6 +4,10 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Forms = System.Windows.Forms;
+using Button = System.Windows.Controls.Button; using Color = System.Windows.Media.Color;
+using Brushes = System.Windows.Media.Brushes;
+using MessageBox = System.Windows.MessageBox;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
 
 namespace CozyBreak;
 
