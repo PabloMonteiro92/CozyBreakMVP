@@ -3,6 +3,7 @@ using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Forms = System.Windows.Forms;
 using Button = System.Windows.Controls.Button; using Color = System.Windows.Media.Color;
@@ -239,6 +240,7 @@ public partial class MainWindow : Window
         };
 
         var panel = new StackPanel { Margin = new Thickness(24) };
+        panel.Children.Add(CreateAnimatedBear());
         panel.Children.Add(new TextBlock
         {
             Text = exercicio.Titulo,
@@ -272,6 +274,41 @@ public partial class MainWindow : Window
         dialog.Closed += (_, _) => _breakDialog = null;
         dialog.Show();
     }
+
+    private static FrameworkElement CreateAnimatedBear()
+    {
+        var bear = new System.Windows.Controls.Canvas
+        {
+            Width = 72,
+            Height = 58,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Margin = new Thickness(0, 0, 0, 4),
+            RenderTransform = new TranslateTransform()
+        };
+
+        var fur = new SolidColorBrush(Color.FromRgb(166, 116, 78));
+        var darkFur = new SolidColorBrush(Color.FromRgb(105, 67, 43));
+        var muzzle = new SolidColorBrush(Color.FromRgb(224, 178, 133));
+        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 16, Height = 16, Fill = fur, Margin = new Thickness(10, 4, 0, 0) });
+        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 16, Height = 16, Fill = fur, Margin = new Thickness(46, 4, 0, 0) });
+        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 48, Height = 38, Fill = fur, Margin = new Thickness(12, 12, 0, 0) });
+        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 28, Height = 18, Fill = muzzle, Margin = new Thickness(22, 28, 0, 0) });
+        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 5, Height = 5, Fill = darkFur, Margin = new Thickness(25, 25, 0, 0) });
+        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 5, Height = 5, Fill = darkFur, Margin = new Thickness(42, 25, 0, 0) });
+        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 7, Height = 5, Fill = darkFur, Margin = new Thickness(32, 34, 0, 0) });
+
+        var bob = new DoubleAnimation
+        {
+            From = 0,
+            To = -4,
+            Duration = TimeSpan.FromMilliseconds(650),
+            AutoReverse = true,
+            RepeatBehavior = RepeatBehavior.Forever
+        };
+        ((TranslateTransform)bear.RenderTransform).BeginAnimation(TranslateTransform.YProperty, bob);
+        return bear;
+    }
+
     private void Cleanup()
     {
         _waterTimer.Stop();
