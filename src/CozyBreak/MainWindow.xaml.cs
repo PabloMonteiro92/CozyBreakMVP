@@ -19,6 +19,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _breakTimer = new();
     private Forms.NotifyIcon? _tray;
     private WaterPetOverlay? _waterOverlay;
+    private Window? _breakDialog;
     private DateTime _presentationUntil;
     private bool _exitRequested;
 
@@ -188,9 +189,9 @@ public partial class MainWindow : Window
         _waterOverlay.Show();
     }
 
-    private void ShowBreak()
+        private void ShowBreak()
     {
-        if (Pausado) return;
+        if (Pausado || _breakDialog is not null) return;
 
         var exercicio = MotorExercicios.Escolher(_perfil.Usuario.FocosDesconforto);
         const double dialogWidth = 440;
@@ -239,19 +240,24 @@ public partial class MainWindow : Window
             BorderThickness = new Thickness(0),
             Cursor = System.Windows.Input.Cursors.Hand
         };
-        btnConcluir.Click += (_, _) => dialog.Close();
+                btnConcluir.Click += (_, _) => dialog.Close();
         panel.Children.Add(btnConcluir);
         dialog.Content = panel;
+
+        _breakDialog = dialog;
+        dialog.Closed += (_, _) => _breakDialog = null;
         dialog.Show();
     }
-
     private void Cleanup()
     {
         _waterTimer.Stop();
         _breakTimer.Stop();
 
-        _waterOverlay?.Close();
+         _waterOverlay?.Close();
         _waterOverlay = null;
+
+        _breakDialog?.Close();
+        _breakDialog = null;
 
         if (_tray is not null)
         {
