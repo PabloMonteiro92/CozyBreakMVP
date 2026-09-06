@@ -72,7 +72,6 @@ public partial class MainWindow : Window
         if (_store.Existe && Validacao.Perfil(_perfil) is null)
         {
             InitializeOrUpdateRuntime();
-            Hide();
         }
     }
 
