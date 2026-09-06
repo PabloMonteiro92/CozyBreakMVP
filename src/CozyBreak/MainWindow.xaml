@@ -15,7 +15,7 @@
         <WrapPanel><CheckBox x:Name="CervicalBox" AutomationProperties.Name="Cervical ou trapézio" Content="Cervical / trapézio" Margin="0,4,14,4"/><CheckBox x:Name="PunhosBox" AutomationProperties.Name="Punhos" Content="Punhos" Margin="0,4,14,4"/><CheckBox x:Name="LombarBox" AutomationProperties.Name="Lombar ou quadril" Content="Lombar / quadril" Margin="0,4,14,4"/><CheckBox x:Name="JoelhosBox" AutomationProperties.Name="Pernas" Content="Pernas" Margin="0,4,14,4"/></WrapPanel>
         <Separator Margin="0,22,0,18"/>
         <TextBlock Text="Preferências" FontSize="20" FontWeight="SemiBold" Foreground="#514238"/>
-        <TextBlock Text="Lembrete de água (minutos)" Margin="0,14,0,4"/><Slider x:Name="WaterSlider" Minimum="1" Maximum="180" TickFrequency="1" IsSnapToTickEnabled="True"/><TextBlock x:Name="WaterValue"/>
+        <TextBlock Text="Lembrete de água (minutos)" Margin="0,14,0,4"/><Slider x:Name="WaterSlider" Minimum="30" Maximum="180" TickFrequency="15" IsSnapToTickEnabled="True"/><TextBlock x:Name="WaterValue"/>
         <TextBlock Text="Lembrete de pausa (minutos)" Margin="0,12,0,4"/><Slider x:Name="BreakSlider" Minimum="20" Maximum="180" TickFrequency="10" IsSnapToTickEnabled="True"/><TextBlock x:Name="BreakValue"/>
         <CheckBox x:Name="SoundBox" Content="Ativar som" Margin="0,14,0,4"/>
         <TextBlock Text="A meta de água é uma estimativa de bem-estar, não uma orientação médica." TextWrapping="Wrap" Foreground="#806F63" Margin="0,18,0,0"/>

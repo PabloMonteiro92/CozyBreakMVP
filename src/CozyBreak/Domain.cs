@@ -102,8 +102,8 @@ public static class Validacao
         if (perfil.Usuario.AlturaCm is < 100 or > 250 || double.IsNaN(perfil.Usuario.AlturaCm) || double.IsInfinity(perfil.Usuario.AlturaCm))
             return "Informe uma altura entre 100 e 250 cm.";
 
-        if (perfil.Configuracoes.IntervaloAguaMinutos is < 1 or > 180)
-            return "O intervalo de hidratação deve situar-se entre 1 e 180 minutos.";
+        if (perfil.Configuracoes.IntervaloAguaMinutos is < 30 or > 180)
+            return "O intervalo de hidratação deve situar-se entre 30 e 180 minutos.";
 
         if (perfil.Configuracoes.IntervaloPausaMinutos is < 20 or > 180)
             return "O intervalo de descanso deve situar-se entre 20 e 180 minutos.";
