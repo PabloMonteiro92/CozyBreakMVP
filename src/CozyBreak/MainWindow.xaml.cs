@@ -10,6 +10,7 @@ using Button = System.Windows.Controls.Button; using Color = System.Windows.Medi
 using Brushes = System.Windows.Media.Brushes;
 using MessageBox = System.Windows.MessageBox;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using MediaBrush = System.Windows.Media.Brush;
 
 namespace CozyBreak;
 
@@ -289,13 +290,13 @@ public partial class MainWindow : Window
         var fur = new SolidColorBrush(Color.FromRgb(166, 116, 78));
         var darkFur = new SolidColorBrush(Color.FromRgb(105, 67, 43));
         var muzzle = new SolidColorBrush(Color.FromRgb(224, 178, 133));
-        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 16, Height = 16, Fill = fur, Margin = new Thickness(10, 4, 0, 0) });
-        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 16, Height = 16, Fill = fur, Margin = new Thickness(46, 4, 0, 0) });
-        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 48, Height = 38, Fill = fur, Margin = new Thickness(12, 12, 0, 0) });
-        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 28, Height = 18, Fill = muzzle, Margin = new Thickness(22, 28, 0, 0) });
-        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 5, Height = 5, Fill = darkFur, Margin = new Thickness(25, 25, 0, 0) });
-        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 5, Height = 5, Fill = darkFur, Margin = new Thickness(42, 25, 0, 0) });
-        bear.Children.Add(new System.Windows.Shapes.Ellipse { Width = 7, Height = 5, Fill = darkFur, Margin = new Thickness(32, 34, 0, 0) });
+        AddPixel(bear, 8, 4, 14, 14, fur);
+        AddPixel(bear, 50, 4, 14, 14, fur);
+        AddPixel(bear, 14, 12, 44, 34, fur);
+        AddPixel(bear, 24, 30, 24, 14, muzzle);
+        AddPixel(bear, 25, 24, 5, 5, darkFur);
+        AddPixel(bear, 42, 24, 5, 5, darkFur);
+        AddPixel(bear, 32, 36, 8, 5, darkFur);
 
         var bob = new DoubleAnimation
         {
@@ -307,6 +308,20 @@ public partial class MainWindow : Window
         };
         ((TranslateTransform)bear.RenderTransform).BeginAnimation(TranslateTransform.YProperty, bob);
         return bear;
+    }
+
+    private static void AddPixel(System.Windows.Controls.Canvas canvas, double left, double top, double width, double height, MediaBrush fill)
+    {
+        var pixel = new System.Windows.Shapes.Rectangle
+        {
+            Width = width,
+            Height = height,
+            Fill = fill,
+            SnapsToDevicePixels = true
+        };
+        System.Windows.Controls.Canvas.SetLeft(pixel, left);
+        System.Windows.Controls.Canvas.SetTop(pixel, top);
+        canvas.Children.Add(pixel);
     }
 
     private void Cleanup()
